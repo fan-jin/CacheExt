@@ -1,0 +1,421 @@
+<?xml version="1.0"?>
+<project name="Mammoth" default="help" basedir=".">
+	
+	<taskdef resource="checkstyletask.properties"
+	         classpath="lib/checkstyle-all-5.0.jar"/>
+	
+	<import file="one-jar-ant-task.xml"/>
+
+	<property name="dir.src.generated" value="Game:generated" />
+	<property name="dir.src" value="Game" />
+	<property name="dir.src.generated" value="generated" />
+	<property name="dir.src.all" value="${dir.src}:${dir.src.generated}" />
+	<property name="dir.build" value="build" />
+	<property name="dir.lib" value="lib" />
+	<property name="dir.test" value="build/test" />
+	<property name="dir.api" value="api" />
+	<property name="dir.build.lib" value="${dir.build}/lib" />
+	<property name="dir.build.jar" value="${dir.build.lib}" />
+	<property name="dir.build.lib.native" value="${dir.build.lib}/native" />
+	<property name="dir.deploy" value="/home/2005/mammoth/public_html/jar" />
+	
+	<property name="dir.src.AI" value="${dir.src}/AI" />
+	<property name="dir.src.image" value="${dir.src}/image" />
+	<property name="dir.src.maps" value="${dir.src}/maps" />
+	<property name="dir.src.music" value="${dir.src}/music" />
+	<property name="dir.src.models" value="${dir.src}/models" />
+	
+	<property name="dir.lib.triangle" value="lib/triangle" />
+	<property name="dir.lib.native" value="lib/native" />
+			
+	<property name="main.standalone" value="Mammoth.Client.JMonkeyStandAlone"/>
+	<property name="main.client" value="Mammoth.Client.JMonkeyClient" />
+	<property name="main.server" value="Mammoth.Server.ServerStart" />
+	<property name="main.mape" value="Mammoth.ContentCreator.Mape.Editor" />
+	<property name="main.wote" value="Mammoth.ContentCreator.Wote2.Wote2Main" />
+	<property name="main.all" value="Mammoth.Client.CommandLineClient" />
+        
+        <!-- Command-line arguments -->
+        
+
+	<path id="project.classpath">
+		
+		<!-- This must be added to the classpath otherwise
+		     graphical clients will not launch! -->
+		<pathelement path="${dir.src.models}"/>
+		
+	    <fileset dir="${dir.build.jar}">
+	        <include name="**/*.jar"/>
+		</fileset>
+	</path>
+	
+	<condition property="nativelibs" value="macosx">
+		<os family="mac"/>
+	</condition>
+		
+	<condition property="nativelibs" value="win32">
+		<os family="windows"/>
+	</condition>
+		
+	<condition property="nativelibs" value="linux32">
+		<os family="unix" arch="i386"/>
+	</condition>
+
+	<condition property="nativelibs" value="linux64">
+		<os family="unix" arch="amd64"/>
+	</condition>
+			
+	<target name="help">
+		<exec executable="ant"><arg value="-p"/></exec>
+	</target>
+	
+	<target name="clean">
+		<delete dir="${dir.build}"/>
+	</target>
+	
+	<target name="dir">
+		<mkdir dir="${dir.build}"/>
+		<mkdir dir="${dir.build.jar}"/>
+	</target>
+	
+	<target name="cc" depends="clean,compile,resource,test,checkstyle"  />
+	
+	<target name="resource" depends="resource.AI, resource.image, resource.image, resource.maps, resource.models, resource.properties" />
+
+	<target name="resource.AI" depends="dir">
+		<jar destfile="${dir.build.jar}/mammoth-AI.jar" >
+			<fileset dir="${dir.src.AI}" casesensitive="yes">
+				<include name="**/*.aimap.xml" />
+				<include name="**/*.scxml" />
+			</fileset>
+		</jar>
+	</target>
+	
+	<target name="resource.image" depends="dir">
+		<jar destfile="${dir.build.jar}/mammoth-image.jar" >
+			<fileset dir="${dir.src.image}" casesensitive="yes">
+				<include name="**/*.png"/>
+				<include name="**/*.jpg"/>
+				<include name="**/*.xml"/>
+			</fileset>
+		</jar>
+	</target>
+    
+	<target name="resource.music" depends="dir">		
+		<jar destfile="${dir.build.jar}/mammoth-music.jar" >
+			<fileset dir="${dir.src.music}" casesensitive="yes">
+				<include name="**/*.ogg"/>
+			</fileset>
+		</jar>
+	</target>
+	
+	<target name="resource.maps" depends="dir">		
+		<jar destfile="${dir.build.jar}/mammoth-maps.jar" >
+			<fileset dir="${dir.src.maps}" casesensitive="yes">
+				<include name="**/*.xml"/>
+				<!-- 2013/01/24: include .xml.triangle files... -->
+				<include name="**/*.xml.triangles"/>
+			</fileset>
+		</jar>
+	</target>
+	
+	<target name="resource.models" depends="dir">        
+		<jar destfile="${dir.build.jar}/mammoth-models.jar" >
+			<fileset dir="${dir.src.models}" casesensitive="yes" >
+				<include name="*.jme"/>
+				<include name="**/*.png"/>
+				<include name="**/*.jpg"/>
+				<include name="**/*.jme"/>
+   			</fileset>
+		</jar>
+    </target>
+	
+	<target name="resource.properties" depends="dir">		
+		<jar destfile="${dir.build.jar}/mammoth-properties.jar" >
+			<fileset dir="${dir.src}" casesensitive="yes">
+	            <include name="*.properties"/>				
+				<include name="*.params"/>
+			</fileset>
+		</jar>	
+	</target>
+	
+	<target name="mammoth.core" depends="compile">
+		
+		<pathconvert property="mf.classpath" pathsep=" ">
+			<path refid="project.classpath" />
+			<flattenmapper />
+		</pathconvert>
+		
+		<jar destfile="${dir.build.jar}/mammoth-core.jar" >			
+			<fileset dir="${dir.build}" casesensitive="yes" >
+				<include name="**/*.class"/>				
+			</fileset>
+			<manifest>
+				<attribute name="Built-By" value="${user.name}" />
+				<attribute name="Main-Class" value="${main.all}" />
+				<attribute name="Class-Path" value="${mf.classpath}" />
+			</manifest>
+		</jar>		
+	</target>
+	
+	<target name="natives" depends="dir">
+		<jar destfile="${dir.build.jar}/mammoth-natives-win32.jar" >
+			<fileset dir="lib/native/win32" casesensitive="yes" />							
+		</jar>
+		<jar destfile="${dir.build.jar}/mammoth-natives-win64.jar" >
+			<fileset dir="lib/native/win64" casesensitive="yes" />							
+		</jar>
+		<jar destfile="${dir.build.jar}/mammoth-natives-linux32.jar" >
+			<fileset dir="lib/native/linux32" casesensitive="yes" />							
+		</jar>
+		<jar destfile="${dir.build.jar}/mammoth-natives-linux64.jar" >
+			<fileset dir="lib/native/linux64" casesensitive="yes" />							
+		</jar>
+		<jar destfile="${dir.build.jar}/mammoth-natives-macosx.jar" >
+			<fileset dir="lib/native/macosx" casesensitive="yes" />							
+		</jar>
+	</target>
+
+	
+	<target name="lib" depends="dir">
+		<copy todir="${dir.build.jar}" flatten="on">
+			<fileset dir="${dir.lib}" casesensitive="yes">				
+				<include name="**/*.jar"/>
+			</fileset>
+		</copy>			
+		<copy todir="${dir.build.lib.native}">
+			<fileset dir="${dir.lib.native}" casesensitive="yes">
+				<include name="**/*sigar*" />
+			</fileset>
+		</copy>		
+	</target>
+			
+	<target name="compile" depends="lib,dir">
+		
+		<javac srcdir="${dir.src.all}" destdir="${dir.build}" debug="on" source="1.6">
+			<classpath >
+				<path refid="project.classpath"/>
+			</classpath>
+		</javac>
+	</target>
+
+   <target name="api">
+      <javadoc packagenames="com.dummy.test.*"
+           sourcepath="${dir.src.all}"
+           defaultexcludes="yes"
+           destdir="${dir.api}"
+           author="true"
+           version="true"
+           use="true"
+           source="1.6"
+           windowtitle="Mammoth API">
+         
+         <packageset dir="${dir.src.all}" defaultexcludes="yes">
+         <include name="Mammoth/**"/>
+         </packageset>
+                    
+         <doctitle>Mammoth Javadocs</doctitle>
+         <tag name="todo" scope="all" description="To do:"/>
+         <link href="http://mammoth.cs.mcgill.ca"/>
+      </javadoc>
+   </target>
+
+    <target name="sign" depends="mammoth.core,resource,lib,natives">    	
+		<echo message="If the signing blocks on one jar for more than 5 seconds please move the mouse until it continues" level="info" />
+		<signjar keystore="${dir.src}/keystore" alias="mammoth" storepass="mammoth" verbose="false" >
+			<fileset dir="${dir.build.jar}">
+				<include name="**/*.jar"/>
+				<exclude name="**/jme*" />				
+			</fileset>
+		</signjar>
+	</target>
+	
+	<target name="deploy" depends="sign">
+		<copy todir="${dir.deploy}" flatten="on">
+			<fileset dir="${dir.build.jar}" casesensitive="yes">				
+				<include name="**/*.jar"/>
+			</fileset>
+		</copy>
+	</target>
+    
+	<target name="all" depends="sign" />
+	
+	<target name="test" depends="mammoth.core,resource,lib,natives">
+		<delete dir="${dir.test}"/>
+
+		<mkdir dir="${dir.test}"/>
+
+		<junit haltonfailure="no" printsummary="withOutAndErr" fork="yes"
+			errorProperty="test.failed" failureProperty="test.failed">
+		    <formatter type="brief" usefile="false" />
+		    <formatter type="xml" />
+			
+			<classpath><path refid="project.classpath"/></classpath>
+			
+			<test name="Mammoth.AllTests" todir="${dir.test}"/>
+
+		</junit>
+		<!-- <fail message="Tests failed: check test reports." if="test.failed" /> -->
+	</target>
+    	
+	<target name="client" depends="compile,resource.properties">
+		<java classname="${main.client}" fork="true" dir="${basedir}">        	
+			<jvmarg value="-Djava.library.path=${basedir}/lib/native/${nativelibs}/"/>
+	        <jvmarg value="-Xms512m"/>		
+	        <jvmarg value="-Xmx512m"/>
+			<arg value="${arg0}"/>
+	        <classpath><path refid="project.classpath"/></classpath>
+		</java>
+	</target>
+	
+	<target name="client.customplayer" depends="compile,resource.properties">
+		<java classname="${main.client}" fork="true" dir="${basedir}">        	
+			<jvmarg value="-Djava.library.path=${basedir}/lib/native/${nativelibs}/"/>
+	        <jvmarg value="-Xms512m"/>		
+	        <jvmarg value="-Xmx512m"/>
+			<arg value="1"/>
+	        <classpath><path refid="project.classpath"/></classpath>
+		</java>
+	</target>	
+	
+	<target name="standalone" depends="compile,resource.properties">
+		<java classname="${main.standalone}" fork="true" dir="${basedir}">        	
+	        <jvmarg value="-Djava.library.path=${basedir}/lib/native/${nativelibs}/"/>
+	        <jvmarg value="-Xms512m"/>		
+	        <jvmarg value="-Xmx512m"/>
+	        <classpath><path refid="project.classpath"/></classpath>
+		</java>
+	</target>
+	    
+	<target name="mape" depends="compile,resource.properties">
+		<java classname="${main.mape}" fork="true" dir="${dir.build}/">
+	    	<jvmarg value="-Djava.library.path=${basedir}/lib/native/${nativelibs}/"/>		
+	    	<classpath><path refid="project.classpath"/></classpath>
+		</java>
+	</target>
+		
+	<target name="wote" depends="compile,resource.properties">
+		<java classname="${main.wote}" fork="true" dir="${dir.build}/">
+			<jvmarg value="-Djava.library.path=${basedir}/lib/native/${nativelibs}/"/>		
+		    <classpath><path refid="project.classpath"/></classpath>
+		</java>
+	</target>
+		
+	<target name="npcclient" depends="compile,resource">
+		<java classname="Mammoth.Client.NPCClient" fork="true" dir="${dir.build}/">		
+	    	<classpath>
+	        	<path refid="project.classpath"/>
+	        	<dirset dir="${dir.build}">
+	        		<include name="**"/>
+	        	</dirset>
+	    	</classpath>
+		</java>
+	</target>
+	
+	<!--
+	<target name="server" depends="compile,resource.properties">
+	    <java classname="Mammoth.Client.Server" fork="true" dir="${dir.build}/">
+	    	<classpath>
+	    		<path refid="project.classpath"/>
+	    		<dirset dir="${dir.build}">
+	    	    	<include name="**"/>
+	    		</dirset>
+	    	</classpath>
+                <arg value="${arg0}"/>
+	    	<jvmarg value="-Xms64m"/>
+	    	<jvmarg value="-Xmx1024m"/>
+	    </java>
+	</target>
+	-->
+	
+	<target name="server" depends="compile,resource.properties">
+    	<echo message="Server cmd-line argument is: ${arg0}" />
+	    <java classname="Mammoth.Client.Server" fork="true" dir="${basedir}/">
+	    	<classpath><path refid="project.classpath"/></classpath>
+            <arg value="${arg0}"/>
+	    	<jvmarg value="-Xms64m"/>
+	    	<jvmarg value="-Xmx1024m"/>
+    		<jvmarg value="-Xdebug" />
+			<jvmarg value="-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5432" />	    	
+	    </java>
+	</target>	
+	
+	<target name="stern" depends="compile,resource.properties">
+        <java classname="Mammoth.NetworkEngine.Stern.SternNetworkHub" fork="true" dir="${dir.build}/">
+        	<jvmarg value="-Xms512m"/>		
+        	<jvmarg value="-Xmx512m"/>
+	    	<classpath>
+	    		<path refid="project.classpath"/>
+	    		<dirset dir="${dir.build}">
+	    	    	<include name="**"/>
+	    		</dirset>
+	    	</classpath>
+        </java>
+    </target>
+		
+	<target name="toile" depends="compile,resource.properties">
+		<java classname="Mammoth.NetworkEngine.Toile.ToileRendezVousNode" fork="true" dir="${dir.build}/">
+			<classpath>
+		    	<path refid="project.classpath"/>
+		        <dirset dir="${dir.build}">
+		        	<include name="**"/>
+		    	</dirset>
+			</classpath>
+		</java>
+	</target>
+	
+	<target name="playerserver" depends="compile,resource.properties">
+	        <java classname="Mammoth.Util.PlayerDistributor.PlayerDistributorServer" fork="true" dir="${dir.build}/">
+				<classpath><path refid="project.classpath"/></classpath>
+	        </java>
+	</target>
+	
+	<target name="checkstyle" depends="dir">
+		<checkstyle config="lib/sun_checks.xml" failOnViolation="false">
+		  <fileset dir="${dir.src}" includes="**/*.java"/>
+		  <!--<formatter type="plain"/> for cleaner output in cruisecontrol-->
+		  <formatter type="xml" toFile="build/checkstyle_errors.xml"/>
+		</checkstyle>
+	</target>
+	
+	<target name="mammoth.test" depends="mammoth.core,resource">
+		 <one-jar destfile="mammoth-test.jar">
+		 	<manifest>
+		 		<attribute name="Built-By" value="${user.name}" />
+		 		<attribute name="One-Jar-Main-Class" value="${main.all}" />
+		 		<attribute name="One-Jar-Expand" value="mammoth.properties,replicationengine.properties,lib/native" />
+		 		<!--<attribute name="Class-Path" value="${mf.classpath}" />-->
+		 	</manifest>
+		 	<main jar="${dir.build.jar}/mammoth-core.jar" />			    			      
+		    <lib>
+		    	<fileset dir="${dir.lib}">
+			        <include name="**/*.jar"/>
+		    		<include name="native/**/*sigar*" />
+		    		<exclude name="**/*jme*"/>
+		    		<exclude name="**/*jgroups*"/>
+		    		<exclude name="**/*pastry*"/>
+		    		<exclude name="**/*weka*"/>
+		    		<exclude name="**/*checkstyle*"/>			    		
+		    		<exclude name="**/*looks*"/>
+		    		<exclude name="**/*jogl*"/>
+		    		<exclude name="**/*lwjgl*"/>
+		    		<exclude name="**/*cobra*"/>
+		    		<exclude name="**/*sphinx*"/>
+		    		<exclude name="**/*appia*"/>
+		    		<exclude name="**/*jinput*"/>
+				</fileset>
+		    	<fileset file="${dir.build.jar}/mammoth-AI.jar" />
+		    	<fileset file="${dir.build.jar}/mammoth-maps.jar" />
+		    	<fileset file="${dir.build.jar}/mammoth-properties.jar" />
+		    </lib>
+		 	<binlib>
+		 		<!--
+		 		<fileset dir="${dir.lib}/native/linux32">
+			        <include name="*.jar"/>
+				</fileset>
+				-->
+		 	</binlib>
+		</one-jar>
+	</target>
+
+</project>

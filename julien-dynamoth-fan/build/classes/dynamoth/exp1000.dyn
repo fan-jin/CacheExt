@@ -1,0 +1,215 @@
+% 0 players
++10
+sleep 3000
++10
+sleep 3000
++10
+sleep 3000
++10
+sleep 3000
++10
+sleep 3000
++10
+sleep 3000
++10
+sleep 3000
++10
+sleep 3000
++10
+sleep 3000
++10
+sleep 3000
+% 100 players
+
++10
+sleep 3000
++10
+sleep 3000
++10
+sleep 3000
++10
+sleep 3000
++10
+sleep 3000
++10
+sleep 3000
++10
+sleep 3000
++10
+sleep 3000
++10
+sleep 3000
++10
+sleep 3000
+% 200 players
+
++10
+sleep 3000
++10
+sleep 3000
++10
+sleep 3000
++10
+sleep 3000
++10
+sleep 3000
++10
+sleep 3000
++10
+sleep 3000
++10
+sleep 3000
++10
+sleep 3000
++10
+sleep 3000
+% 300 players
+
++10
+sleep 6000
++10
+sleep 6000
++10
+sleep 6000
++10
+sleep 6000
++10
+sleep 6000
++10
+sleep 6000
++10
+sleep 6000
++10
+sleep 6000
++10
+sleep 6000
++10
+sleep 6000
+% 400 players
+
++10
+sleep 6000
++10
+sleep 6000
++10
+sleep 6000
++10
+sleep 6000
++10
+sleep 6000
++10
+sleep 6000
++10
+sleep 6000
++10
+sleep 6000
++10
+sleep 6000
++10
+sleep 6000
+% 500 players
+
++10
+sleep 6000
++10
+sleep 6000
++10
+sleep 6000
++10
+sleep 6000
++10
+sleep 6000
++10
+sleep 6000
++10
+sleep 6000
++10
+sleep 6000
++10
+sleep 6000
++10
+sleep 6000
+% 600 players
+
++10
+sleep 6000
++10
+sleep 6000
++10
+sleep 6000
++10
+sleep 6000
++10
+sleep 6000
++10
+sleep 6000
++10
+sleep 6000
++10
+sleep 6000
++10
+sleep 6000
++10
+sleep 6000
+% 700 players
+
++10
+sleep 6000
++10
+sleep 6000
++10
+sleep 6000
++10
+sleep 6000
++10
+sleep 6000
++10
+sleep 6000
++10
+sleep 6000
++10
+sleep 6000
++10
+sleep 6000
++10
+sleep 6000
+% 800 players
+
++10
+sleep 6000
++10
+sleep 6000
++10
+sleep 6000
++10
+sleep 6000
++10
+sleep 6000
++10
+sleep 6000
++10
+sleep 6000
++10
+sleep 6000
++10
+sleep 6000
++10
+sleep 6000
+% 900 players
+
+activate 1000 1100 false
+sleep 40000
+activate 900 1000 false
+sleep 40000
+activate 800 900 false
+sleep 40000
+activate 700 800 false
+sleep 40000
+activate 600 700 false
+sleep 40000
+activate 500 600 false
+sleep 40000
+activate 400 500 false
+sleep 40000
+activate 300 400 false
+sleep 40000

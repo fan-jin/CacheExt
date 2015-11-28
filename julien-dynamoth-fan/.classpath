@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry excluding="image/ImageResource.java|image/|maps/|music/|models/|models/|AI/|AI/" kind="src" path="Game"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry exported="true" kind="lib" path="lib/sigar.jar"/>
+	<classpathentry kind="lib" path="lib/jedis-2.1.0-juliengs.jar" sourcepath="/home/julien/Documents/McGill-repos/Thesis/Mammoth/jedis"/>
+	<classpathentry kind="lib" path="lib/commons-lang-2.3.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
