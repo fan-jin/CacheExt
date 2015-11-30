@@ -34,7 +34,7 @@ public abstract class CacheClient {
         private CacheExt server; // server stub
 
         // Local storage stuff
-        private Hashtable<String, BaseObject> hashtable = new Hashtable<String, BaseObject>(); // hashtable for objects
+        private Hashtable<String, ObjectBundle> hashtable = new Hashtable<String, ObjectBundle>(); // hashtable for objects
         private ArrayList<String> subscription = new ArrayList<String>(); // arraylist for subscriptions
 
 	public CacheClient()
@@ -117,12 +117,31 @@ public abstract class CacheClient {
             }
         }
         
-        public void put(String key, BaseObject o)
+        public void store(String key, BaseObject o)
         {
-            hashtable.put(key, o);
+            // if object exists, replace, otherwise, create new
+            if (hashtable.containsKey(key))
+            {
+                hashtable.get(key).setObj(o);
+            }
+            else
+            {
+                hashtable.put(key, new ObjectBundle(o));
+            }
         }
         
-        public BaseObject get(String key)
+        public void storeAsBundle(String key, ObjectBundle b)
+        {
+            // if object exists, replace, otherwise, create new
+            hashtable.put(key, b);
+        }
+        
+        public BaseObject retrieve(String key)
+        {
+            return hashtable.get(key).getObj();
+        }
+        
+        private ObjectBundle getBundle(String key)
         {
             return hashtable.get(key);
         }
@@ -131,12 +150,13 @@ public abstract class CacheClient {
         {
             try
             {
+                // subscribe then retrieve
+                if (!subscription.contains(key)) subscribe(key);
                 BaseObject o = (BaseObject) Serialization.deserialize(server.getObj(key));
                 if (o != null) {
-                    put(key, o);
-                    if (!subscription.contains(key)) subscribe(key);
-                }
-                
+                    store(key, o);
+                    getBundle(key).apply(); // apply updates in the queue if any
+                }                
             }
             catch (RemoteException e)
             {
@@ -148,7 +168,7 @@ public abstract class CacheClient {
         public int getVersion(String key)
         {
             BaseObject o;
-            if ((o = hashtable.get(key)) != null)
+            if ((o = retrieve(key)) != null)
             {
                 return o.getVersion();
             }
@@ -224,33 +244,32 @@ public abstract class CacheClient {
 	 */
 	public void operationReceived(String key, Operation operation)
         {
-            System.out.println("receive update from server for client 1=" + System.nanoTime());
             log("CacheClient::operationReceived: key=" + key + ", operation=" + operation.getName());
-            BaseObject obj;
-            if ((obj = get(key)) != null)
+            ObjectBundle bundle;
+            if ((bundle = getBundle(key)) == null)
             {
-                log("CacheClient::operationReceived: key=" + key + ", version=" + obj.getVersion() + ", update_version=" + operation.getVersion());
-                if (operation.getVersion() == obj.getVersion() + 1) 
+                log("CacheClient::operationReceived: key=" + key + ", operation=" + operation.getName() +", creating bundle");
+                store(key, null);
+                bundle = getBundle(key); // retrieve newly created bundle
+            }
+            if (!bundle.queue(operation))
+            {
+                log("CacheClient::operationReceived: error queuing operation");
+                log("CacheClient::operationReceived: fetch latest copy of key=" + bundle.getObj().getKey() + " from server");
+                try
                 {
-                    log("CacheClient::operationReceived: version correct, apply update");
-                    obj.applyUpdate(operation);
-                    System.out.println("after performing for client 1=" + System.nanoTime());
+                    BaseObject obj = (BaseObject) Serialization.deserialize(server.getObj(key));
+                    if (obj != null) store(key, obj);
                 }
-                else
+                catch (RemoteException e)
                 {
-                    log("CacheClient::operationReceived: version incorrect, discard update");
-                    log("CacheClient::operationReceived: fetch latest copy of key=" + obj.getKey() + " from server");
-                    try
-                    {
-                        obj = (BaseObject) Serialization.deserialize(server.getObj(key));
-                        if (obj != null) put(key, obj);
-                    }
-                    catch (RemoteException e)
-                    {
-                        log("CacheClient::operationReceived exception: " + e.toString());
-                        e.printStackTrace();
-                    }
+                    log("CacheClient::operationReceived exception: " + e.toString());
+                    e.printStackTrace();
                 }
+            }
+            else
+            {
+                if (bundle.getObj() != null) bundle.apply();
             }
         }
         

@@ -10,6 +10,7 @@ import java.util.logging.Logger;
 
 import static org.imgscalr.Scalr.*;
 import CacheExt.Operation;
+import CacheExt.ObjectBundle;
 
 /**
  *
@@ -20,26 +21,42 @@ public class Example {
 		
 		// Launch 3 cache clients... Assign them a different id
 		ExampleCacheClient client1 = new ExampleCacheClient(1);
-		ExampleCacheClient client2 = new ExampleCacheClient(2);
+                ExampleCacheClient client2 = new ExampleCacheClient(2);
 //		ExampleCacheClient client3 = new ExampleCacheClient(3);
 		
 		// Connect them all.
 		// This operation will fail if the RPubHub has not been started!
                 Player p = new Player("testplayer", "person1", 5);
                 System.out.println(p);
-                client1.put("testplayer", p);
+                ObjectBundle bundle = new ObjectBundle(p) {
+                    @Override
+                    public void log(String s)
+                    {
+                        System.out.println("Client[" + 1 + "]-" + s);
+                    }
+                };
+                client1.storeAsBundle("testplayer", bundle);
                 client1.load("testplayer", p);
-                client2.fetch("testplayer");
-                sleep(1000);
-                System.out.println("Before performing from client 1=" + System.nanoTime());
+                client2.subscribe("testplayer");
                 client1.perform("testplayer", new Operation(client1.getNextVersion("testplayer"), "setVar", 15));
                 sleep(50);
-                client2.perform("testplayer", new Operation(client2.getNextVersion("testplayer"), "multiplyVar", 2));
-                sleep(50);
+                System.out.println("breakpoint");
+                
+                client1.perform("testplayer", new Operation(client1.getNextVersion("testplayer"), "multiplyVar", 2));
+//                client2.fetch("testplayer");
+                client2.fetch("testplayer");
+                sleep(1000);
+                client1.perform("testplayer", new Operation(client1.getNextVersion("testplayer"), "multiplyVar", 2));
+                sleep(1000);
+                
+//                client1.perform("testplayer", new Operation(client1.getNextVersion("testplayer"), "setVar", 15));
+//                sleep(50);
+//                client2.perform("testplayer", new Operation(client2.getNextVersion("testplayer"), "multiplyVar", 2));
+//                sleep(50);
                 System.out.println("at client 1");
-                System.out.println(client1.get("testplayer"));
+                System.out.println(client1.retrieve("testplayer"));
                 System.out.println("at client 2");
-                System.out.println(client2.get("testplayer"));
+                System.out.println(client2.retrieve("testplayer"));
                 //System.out.println((Player)CacheClient.deserialize(client1.server.getObj("testplayer")));
 //		client2.connect();
 //		client3.connect();
