@@ -5,10 +5,12 @@
  */
 package CacheExt;
 
+import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import javax.imageio.ImageIO;
 
 /**
  *
@@ -42,6 +44,48 @@ public class Serialization {
         }
         return null;
     }
+    
+    /**
+     * Serialize the object (BufferedImage)
+     *
+     * @param img the BufferedImage object to serialize
+     */
+    public static byte[] serialize(BufferedImage img)
+    {
+        try{
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ImageIO.write(img, "jpg", baos);
+            baos.close();
+            return baos.toByteArray();
+        }
+        catch (Exception e)
+        {
+            System.err.println("Serialization(BufferedImage) error: " + e.toString());
+            e.printStackTrace();
+        }
+        return null;
+    }
+    
+    /**
+     * Deserialize the object to BufferedImage
+     *
+     * @param o the object to deserialize
+     */
+    public static BufferedImage deserializeBufferedImage(byte[] o)
+    {
+        try{
+            ByteArrayInputStream bais = new ByteArrayInputStream(o);
+            BufferedImage img = ImageIO.read(bais);
+            bais.close();
+            return img;
+        }
+        catch (Exception e)
+        {
+            System.err.println("Deserialization(BufferedImage) error: " + e.toString());
+            e.printStackTrace();
+        }
+        return null;
+    }  
 
     /**
      * Deserialize the object
