@@ -37,7 +37,7 @@ public class ObjectBundle {
         else if (obj == null && !methods.isEmpty())
         {
             // object has not yet been received from the server, subsequent update arrives
-            Operation last = methods.getLast(); // get the lastest update in the queue
+            Operation last = methods.getLast(); // get the latest update in the queue
             if (ops.getVersion() == last.getVersion() + 1) // correct version arrives
             {
                 log("ObjectBundle::queue: object=null, appending to previous update " + last.getVersion() + " in queue");
@@ -76,7 +76,7 @@ public class ObjectBundle {
         else if (obj != null && !methods.isEmpty())
         {
             // object has been received from the server, subsequent update arrives
-            Operation last = methods.getLast(); // get the lastest update in the queue
+            Operation last = methods.getLast(); // get the latest update in the queue
             if (ops.getVersion() == last.getVersion() + 1) // correct version arrives
             {
                 log("ObjectBundle::queue: object is present, appending to previous update " + last.getVersion() + " in queue");
