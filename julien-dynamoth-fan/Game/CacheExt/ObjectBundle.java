@@ -30,7 +30,7 @@ public class ObjectBundle {
         {
             // object has not yet been received from the server, and the first update arrives
             // enqueue the first update
-            log("ObjectBundle::queue: object=null, queue is empty");
+            log("ObjectBundle::queue: object=null, queue is empty, add to queue " + ops.getName());
             methods.add(ops);
             return true;
         }
@@ -40,7 +40,7 @@ public class ObjectBundle {
             Operation last = methods.getLast(); // get the latest update in the queue
             if (ops.getVersion() == last.getVersion() + 1) // correct version arrives
             {
-                log("ObjectBundle::queue: object=null, appending to previous update " + last.getVersion() + " in queue");
+                log("ObjectBundle::queue: object=null, appending to previous update with version=" + last.getVersion() + " in queue");
                 methods.add(ops);
                 return true;
             }

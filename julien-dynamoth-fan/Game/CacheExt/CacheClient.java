@@ -148,12 +148,15 @@ public abstract class CacheClient {
         
         public void fetch(String key)
         {
+            log("CacheClient::fetch: key=" + key);
             try
             {
                 // subscribe then retrieve
                 if (!subscription.contains(key)) subscribe(key);
                 BaseObject o = (BaseObject) Serialization.deserialize(server.getObj(key));
                 if (o != null) {
+                    log("CacheClient::fetch: key=" + key + ", received version=" + o.getVersion());
+                    log("received:\n" + o);
                     store(key, o);
                     getBundle(key).apply(); // apply updates in the queue if any
                 }                
