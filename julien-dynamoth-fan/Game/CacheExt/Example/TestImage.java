@@ -122,6 +122,7 @@ public class TestImage extends BaseObject {
 //        image.flipHorizontal();
         // image.display(720);
         TestImage copy = (TestImage) Serialization.deserialize(Serialization.serialize(image));
+        copy.flipHorizontal();
         copy.display(720);
     }
 }
