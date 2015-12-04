@@ -10,6 +10,9 @@ import Mammoth.NetworkEngine.RPub.Util.KingDataset;
 import Mammoth.NetworkEngine.RPub.Util.MaxThreadsMain;
 import Mammoth.NetworkEngine.RPub.Util.RawKingDataset;
 import CacheExt.Example.Example;
+import CacheExt.Example.CacheServer;
+import CacheExt.Example.TestClient;
+import CacheExt.Example.TestImage;
 
 public class CommandLineClient {
 
@@ -19,6 +22,12 @@ public class CommandLineClient {
 		String ec2Region = System.getProperty("ec2.region", "");
 		System.out.println("EC2-Region: " + ec2Region);
 		
+                System.out.println("Launch Args:");
+                for (int i = 0; i < args.length; i++)
+                {
+                    System.out.println("args["+i+"]=" + args[i]);
+                }
+                
 		if (args.length < 0) {
 			System.err.println("Invalid arguments");
 		}
@@ -61,8 +70,26 @@ public class CommandLineClient {
 			RawKingDataset.main(new String[] {});
 		} else if (mode.equals("maxthreadsmain")) {
 			MaxThreadsMain.main(new String[] {});
-		} else if (mode.equals("cacheext-example")) {
-			Example.main(new String[] {});
+		} else if (mode.equals("cacheext-server")) {
+                        String[] serverArgs = new String[args.length - 1];
+                        if (args.length > 1)
+                        {
+                            for (int j = 1; j < args.length; j++)
+                            {
+                                serverArgs[j-1] = args[j];
+                            }
+                        }
+			CacheServer.main(serverArgs);
+		} else if (mode.equals("cacheext-client")) {
+			String[] clientArgs = new String[args.length - 1];
+                        if (args.length > 1)
+                        {
+                            for (int j = 1; j < args.length; j++)
+                            {
+                                clientArgs[j-1] = args[j];
+                            }
+                            TestClient.main(clientArgs);
+                        }                        
 		}
 	}
 }
