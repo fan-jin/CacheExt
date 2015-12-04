@@ -41,9 +41,37 @@ public abstract class CacheClient {
         {
             connect();
 	}
+        
+        public CacheClient(String property)
+        {
+            connect(property);
+	}
 	
 	public void connect() {
 		engine = new RPubNetworkEngine();
+		try {
+			engine.connect();
+		} catch (IOException ex) {
+			Logger.getLogger(CacheClient.class.getName()).log(Level.SEVERE, null, ex);
+		} catch (AlreadyConnectedException ex) {
+			Logger.getLogger(CacheClient.class.getName()).log(Level.SEVERE, null, ex);
+		}
+		
+		// Create reactor
+		reactor = new Reactor("CacheClient-Reactor", engine);
+		
+		// Subscribe to appropriate messages
+		reactor.register(CacheOperationMessage.class, new Handler() {
+
+			@Override
+			public void handle(Message msg) {
+				handleCacheOperationMessage((CacheOperationMessage)msg);
+			}
+		});
+	}
+        
+        public void connect(String property) {
+		engine = new RPubNetworkEngine(property);
 		try {
 			engine.connect();
 		} catch (IOException ex) {
