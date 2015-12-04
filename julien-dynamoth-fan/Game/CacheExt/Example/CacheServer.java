@@ -73,6 +73,7 @@ public class CacheServer extends CacheClient implements CacheExt {
     
     public static void main(String args[])
     {
+        Registry registry;
         String server_binding = "cache";
         String server = "localhost";
         int port = 1099;
@@ -84,10 +85,16 @@ public class CacheServer extends CacheClient implements CacheExt {
             CacheExt stub = (CacheExt) UnicastRemoteObject.exportObject(c, 0);
 
             // Bind the remote object's stub in the registry
-            Registry registry = LocateRegistry.createRegistry(port);
+            // Start rmiregistry on localhost with default port unless specified 
+            if (args.length > 0)
+            {
+                port = Integer.valueOf(args[0]);
+            }
+            registry = LocateRegistry.createRegistry(port);
+
             registry.rebind(server_binding, stub);
             
-            System.err.println("CacheServer ready at "+ server);
+            System.err.println("CacheServer ready at "+ server+":"+port);
         }
         catch (Exception e) {
             System.err.println("Server exception: " + e.toString());
