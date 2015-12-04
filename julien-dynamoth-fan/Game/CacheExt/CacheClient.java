@@ -75,11 +75,11 @@ public abstract class CacheClient {
                 server = (CacheExt) registry.lookup(server_name);
                 if(server!=null)
                 {
-                    System.out.println("Successfully Connected to " + server_name);
+                    log("Successfully Connected to " + server_name);
                 }
                 else
                 {
-                    System.out.println("Unsuccessful Connection to " + server_name);
+                    log("Unsuccessful Connection to " + server_name);
                 }
             }
             catch (Exception e) 
