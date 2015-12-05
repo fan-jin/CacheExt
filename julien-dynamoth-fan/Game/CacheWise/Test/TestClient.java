@@ -44,6 +44,7 @@ public class TestClient extends CacheClient {
                 String src = args[5];
                 c.remotePut(key, new TestImage(key, src));
                 c.unsubscribe(key);
+                System.exit(0);
             }
             else if (action.equals("getimage"))
             {

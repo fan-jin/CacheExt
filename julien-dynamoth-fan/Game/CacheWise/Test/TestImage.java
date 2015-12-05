@@ -15,6 +15,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
+import javax.swing.WindowConstants;
 import org.imgscalr.Scalr;
 
 /**
@@ -110,6 +111,7 @@ public class TestImage extends BaseObject {
             }
         });
         f.pack();
+        f.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         f.setVisible(true);
     }
     
