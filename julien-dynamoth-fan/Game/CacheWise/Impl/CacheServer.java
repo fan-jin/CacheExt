@@ -53,9 +53,9 @@ public class CacheServer extends CacheClient implements CacheWise {
             if (m.getVersion() == s.getVersion() + 1)
             {
                 System.out.println("CacheServer::performOperation: version correct");
+                publishOperation(key, m); // publish update first before applying
                 if (s.applyUpdate(m))
                 {
-                    publishOperation(key, m);
                     return true;
                 }
                 return false;
