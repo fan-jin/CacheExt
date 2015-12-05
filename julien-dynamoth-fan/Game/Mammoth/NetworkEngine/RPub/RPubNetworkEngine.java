@@ -41,11 +41,6 @@ public class RPubNetworkEngine extends BaseNetworkEngine implements RPubMessageL
 		this(false);		
 	}
         
-        public RPubNetworkEngine(String property) {
-		this(false, property);		
-                System.out.println("Using custom property " + property + " for DynamothRPubManager");
-	}
-	
 	public RPubNetworkEngine(boolean infrastructure) {
 		super();
 	
@@ -53,16 +48,6 @@ public class RPubNetworkEngine extends BaseNetworkEngine implements RPubMessageL
 		this.infrastructure = infrastructure;
 		
 		rpubManager = new DynamothRPubManager((RPubNetworkID)(this.getId()), this);
-		
-	}
-        
-        public RPubNetworkEngine(boolean infrastructure, String property) {
-		super();
-	
-		this.setId(new RPubNetworkID());
-		this.infrastructure = infrastructure;
-		
-		rpubManager = new DynamothRPubManager((RPubNetworkID)(this.getId()), this, property);
 		
 	}
 	
