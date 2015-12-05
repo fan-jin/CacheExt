@@ -93,7 +93,7 @@ public abstract class CacheClient {
             try
             {
                 if (!subscription.contains(key)) subscribe(key);
-                if (!server.performOperation(key, m)) fetch(key);
+                if (!server.performOperation(key, m)) remoteGet(key);
             }
             catch (RemoteException e)
             {
@@ -102,7 +102,7 @@ public abstract class CacheClient {
             }
         }
         
-        public void load(String key, BaseObject o)
+        public void remotePut(String key, BaseObject o)
         {
             try
             {
@@ -116,7 +116,7 @@ public abstract class CacheClient {
             }
         }
         
-        public void store(String key, BaseObject o)
+        public void localPut(String key, BaseObject o)
         {
             // if object exists, replace, otherwise, create new
             if (hashtable.containsKey(key))
@@ -135,7 +135,7 @@ public abstract class CacheClient {
             hashtable.put(key, b);
         }
         
-        public BaseObject retrieve(String key)
+        public BaseObject localGet(String key)
         {
             return hashtable.get(key).getObj();
         }
@@ -145,7 +145,7 @@ public abstract class CacheClient {
             return hashtable.get(key);
         }
         
-        public void fetch(String key)
+        public void remoteGet(String key)
         {
             log("CacheClient::fetch: key=" + key);
             try
@@ -154,9 +154,9 @@ public abstract class CacheClient {
                 if (!subscription.contains(key)) subscribe(key);
                 BaseObject o = (BaseObject) Serialization.deserialize(server.getObj(key));
                 if (o != null) {
-                    log("CacheClient::fetch: key=" + key + ", received version=" + o.getVersion());
+                    log("CacheClient::remoteGet: key=" + key + ", received version=" + o.getVersion());
                     log("received:\n" + o);
-                    store(key, o);
+                    localPut(key, o);
                     getBundle(key).apply(); // apply updates in the queue if any
                 }                
             }
@@ -170,7 +170,7 @@ public abstract class CacheClient {
         public int getVersion(String key)
         {
             BaseObject o;
-            if ((o = retrieve(key)) != null)
+            if ((o = localGet(key)) != null)
             {
                 return o.getVersion();
             }
@@ -251,7 +251,7 @@ public abstract class CacheClient {
             if ((bundle = getBundle(key)) == null)
             {
                 log("CacheClient::operationReceived: key=" + key + ", operation=" + operation.getName() +", creating bundle");
-                store(key, null);
+                localPut(key, null);
                 bundle = getBundle(key); // retrieve newly created bundle
             }
             if (!bundle.queue(operation))
@@ -261,7 +261,7 @@ public abstract class CacheClient {
                 try
                 {
                     BaseObject obj = (BaseObject) Serialization.deserialize(server.getObj(key));
-                    if (obj != null) store(key, obj);
+                    if (obj != null) localPut(key, obj);
                 }
                 catch (RemoteException e)
                 {

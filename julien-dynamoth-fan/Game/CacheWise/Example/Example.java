@@ -76,7 +76,7 @@ public class Example {
                     }
                 };
                 client1.storeAsBundle("testplayer", bundle);
-                client1.load("testplayer", p);
+                client1.remotePut("testplayer", p);
                 client2.subscribe("testplayer");
                 client1.perform("testplayer", new Operation(client1.getNextVersion("testplayer"), "setVar", 15));
                 sleep(50);
@@ -84,7 +84,7 @@ public class Example {
                 
                 client1.perform("testplayer", new Operation(client1.getNextVersion("testplayer"), "multiplyVar", 2));
 //                client2.fetch("testplayer");
-                client2.fetch("testplayer");
+                client2.remoteGet("testplayer");
                 sleep(1000);
                 client1.perform("testplayer", new Operation(client1.getNextVersion("testplayer"), "multiplyVar", 2));
                 sleep(1000);
@@ -94,9 +94,9 @@ public class Example {
 //                client2.perform("testplayer", new Operation(client2.getNextVersion("testplayer"), "multiplyVar", 2));
 //                sleep(50);
                 System.out.println("at client 1");
-                System.out.println(client1.retrieve("testplayer"));
+                System.out.println(client1.localGet("testplayer"));
                 System.out.println("at client 2");
-                System.out.println(client2.retrieve("testplayer"));
+                System.out.println(client2.localGet("testplayer"));
                 //System.out.println((Player)CacheClient.deserialize(client1.server.getObj("testplayer")));
 //		client2.connect();
 //		client3.connect();

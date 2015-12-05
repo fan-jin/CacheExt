@@ -42,16 +42,16 @@ public class TestClient extends CacheClient {
                 // store an image in server
                 String key = args[4];
                 String src = args[5];
-                c.load(key, new TestImage(key, src));
+                c.remotePut(key, new TestImage(key, src));
                 c.unsubscribe(key);
             }
             else if (action.equals("getimage"))
             {
                 // retrieve an image from server, then display
                 String key = args[4];
-                c.fetch(key);
+                c.remoteGet(key);
                 c.unsubscribe(key);
-                TestImage img = (TestImage) c.retrieve(key);
+                TestImage img = (TestImage) c.localGet(key);
                 img.display(720);
             }
         }
