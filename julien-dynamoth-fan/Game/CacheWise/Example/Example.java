@@ -78,15 +78,15 @@ public class Example {
                 client1.storeAsBundle("testplayer", bundle);
                 client1.remotePut("testplayer", p);
                 client2.subscribe("testplayer");
-                client1.perform("testplayer", new Operation(client1.getNextVersion("testplayer"), "setVar", 15));
+                client1.remotePerform("testplayer", new Operation(client1.getNextVersion("testplayer"), "setVar", 15));
                 sleep(50);
                 System.out.println("breakpoint");
                 
-                client1.perform("testplayer", new Operation(client1.getNextVersion("testplayer"), "multiplyVar", 2));
+                client1.remotePerform("testplayer", new Operation(client1.getNextVersion("testplayer"), "multiplyVar", 2));
 //                client2.fetch("testplayer");
                 client2.remoteGet("testplayer");
                 sleep(1000);
-                client1.perform("testplayer", new Operation(client1.getNextVersion("testplayer"), "multiplyVar", 2));
+                client1.remotePerform("testplayer", new Operation(client1.getNextVersion("testplayer"), "multiplyVar", 2));
                 sleep(1000);
                 
 //                client1.perform("testplayer", new Operation(client1.getNextVersion("testplayer"), "setVar", 15));

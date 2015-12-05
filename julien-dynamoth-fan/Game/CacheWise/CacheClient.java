@@ -88,7 +88,7 @@ public abstract class CacheClient {
             }
         }
         
-        public void perform(String key, Operation m)
+        public void remotePerform(String key, Operation m)
         {
             try
             {
