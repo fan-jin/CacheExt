@@ -92,32 +92,45 @@ public class ObjectBundle {
         return false;
     }
     
-    public synchronized void apply()
+    public synchronized boolean apply()
     {
-        // object has not yet been received from the server, do nothing
-        if (obj != null)
+        prepareQueue(); // remove older updates
+        if (!methods.isEmpty())
         {
-            validateQueue();
-            while (!methods.isEmpty()) obj.applyUpdate(methods.remove());
-        }
-    }
-    
-    private void validateQueue()
-    {
-        Iterator<Operation> iterator = methods.iterator();
-        while (iterator.hasNext())
-        {
-            Operation ops = iterator.next();
-            if (ops.getVersion() <= obj.getVersion())
+            if (methods.peek().getVersion() == obj.getVersion() + 1)
             {
-                log("ObjectBundle::validateQueue: older update " + ops.getName() + " detected, removing");
-                // clean up older updates
-                iterator.remove();
+                // updates are valid, apply
+                while (!methods.isEmpty()) obj.applyUpdate(methods.remove());
+                return true;
             }
             else
             {
-                // stop at new updates
-                break;
+                // gap between object and updates, refetch is required
+                return false;
+            }
+        }
+        return true;
+    }
+    
+    private void prepareQueue()
+    {
+        Iterator<Operation> iterator = methods.iterator();
+        synchronized (methods)
+        {
+            while (iterator.hasNext())
+            {
+                Operation ops = iterator.next();
+                if (ops.getVersion() <= obj.getVersion())
+                {
+                    log("ObjectBundle::prepareQueue: older update " + ops.getName() + " detected, removing");
+                    // clean up older updates
+                    iterator.remove();
+                }
+                else
+                {
+                    // stop at new updates
+                    break;
+                }
             }
         }
     }

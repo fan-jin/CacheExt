@@ -157,7 +157,11 @@ public abstract class CacheClient {
                     log("CacheClient::remoteGet: key=" + key + ", received version=" + o.getVersion());
                     log("received:\n" + o);
                     localPut(key, o);
-                    getBundle(key).apply(); // apply updates in the queue if any
+                    // apply updates in the queue if any
+                    if (!getBundle(key).apply())
+                    {
+                        remoteGet(key);
+                    }
                 }                
             }
             catch (RemoteException e)
@@ -271,7 +275,13 @@ public abstract class CacheClient {
             }
             else
             {
-                if (bundle.getObj() != null) bundle.apply();
+                if (bundle.getObj() != null) 
+                {
+                    if (!bundle.apply())
+                    {
+                        remoteGet(key);
+                    }
+                }
             }
         }
         
