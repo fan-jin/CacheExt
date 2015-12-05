@@ -13,6 +13,7 @@ import CacheWise.Example.Example;
 import CacheWise.Impl.CacheServer;
 import CacheWise.Test.TestClient;
 import CacheWise.Test.TestImage;
+import CacheWise.Test.TestMonitor;
 
 public class CommandLineClient {
 
@@ -89,6 +90,16 @@ public class CommandLineClient {
                                 clientArgs[j-1] = args[j];
                             }
                             TestClient.main(clientArgs);
+                        }                        
+		} else if (mode.equals("cacheext-sigar")) {
+			String[] sigarArgs = new String[args.length - 1];
+                        if (args.length > 1)
+                        {
+                            for (int j = 1; j < args.length; j++)
+                            {
+                                sigarArgs[j-1] = args[j];
+                            }
+                            TestMonitor.main(sigarArgs);
                         }                        
 		}
 	}
