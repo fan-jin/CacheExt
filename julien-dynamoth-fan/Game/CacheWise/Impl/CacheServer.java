@@ -49,25 +49,27 @@ public class CacheServer extends CacheClient implements CacheWise {
     {
         System.out.println("CacheServer::performOperation: key=" + key + ", version=" + m.getVersion());
         SubjectPlus s = hashtable.get(key);
-        if (s != null) {
-            if (m.getVersion() == s.getVersion() + 1)
-            {
-                System.out.println("CacheServer::performOperation: version correct");
-                publishOperation(key, m); // publish update first before applying
-                if (s.applyUpdate(m))
+        synchronized (hashtable) {
+            if (s != null) {
+                if (m.getVersion() == s.getVersion() + 1)
                 {
-                    return true;
+                    System.out.println("CacheServer::performOperation: version correct");
+                    publishOperation(key, m); // publish update first before applying
+                    if (s.applyUpdate(m))
+                    {
+                        return true;
+                    }
+                    return false;
                 }
-                return false;
+                else
+                {
+                     System.err.println("CacheServer::performOperation: incorrect version key=" +
+                       key + ", version=" +
+                       s.getVersion() + ", update_version: " + m.getVersion());
+                     return false;
+                }
             }
-            else
-            {
-                 System.err.println("CacheServer::performOperation: incorrect version key=" +
-                   key + ", version=" +
-                   s.getVersion() + ", update_version: " + m.getVersion());
-                 return false;
-            }
-        }
+        }        
         return false;
     }
     
