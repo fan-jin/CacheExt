@@ -3,14 +3,23 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package CacheExt.Example;
+package CacheWise.Example;
 
+import CacheWise.Impl.ReplicaInstance;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static org.imgscalr.Scalr.*;
-import CacheExt.Operation;
-import CacheExt.ObjectBundle;
+import CacheWise.Operation;
+import CacheWise.ObjectBundle;
+import Mammoth.NetworkEngine.RPub.Util.SigarUtil;
+import Mammoth.Util.Log.NetworkData;
+import java.util.Timer;
+import java.util.TimerTask;
+import org.hyperic.sigar.Sigar;
+import org.hyperic.sigar.SigarException;
+import org.hyperic.sigar.SigarProxy;
+import org.hyperic.sigar.SigarProxyCache;
 
 /**
  *
@@ -18,12 +27,43 @@ import CacheExt.ObjectBundle;
  */
 public class Example {
 	public static void main(String[] args) {
+            
+            
+                // Sigar - for network logging (compare NetData VS computed data)
+                SigarProxy sigar;
+
+                // NetData
+                NetworkData netData = null;
+                
+                SigarUtil.setupSigarNatives();
+                
+                Sigar sigarImpl = new Sigar();
 		
-		// Launch 3 cache clients... Assign them a different id
-		ExampleCacheClient client1 = new ExampleCacheClient(1);
-                ExampleCacheClient client2 = new ExampleCacheClient(2);
-//		ExampleCacheClient client3 = new ExampleCacheClient(3);
+		try {
+			netData = new NetworkData(sigarImpl);
+		} catch (SigarException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			netData = null;
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			netData = null;
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			netData = null;
+		}
 		
+                sigar =	SigarProxyCache.newInstance(sigarImpl, 100);
+                
+                if (args.length > 0)
+                {
+                    
+                }
+                
+		ReplicaInstance client1 = new ReplicaInstance(1);
+                ReplicaInstance client2 = new ReplicaInstance(2);	
 		// Connect them all.
 		// This operation will fail if the RPubHub has not been started!
                 Player p = new Player("testplayer", "person1", 5);
@@ -60,7 +100,19 @@ public class Example {
                 //System.out.println((Player)CacheClient.deserialize(client1.server.getObj("testplayer")));
 //		client2.connect();
 //		client3.connect();
-                
+                Long[] m;
+                try {
+                        m = netData.getMetric();
+
+                        long totalrx = m[0];
+                long totaltx = m[1];
+                System.out.println("totalrx: " + totalrx);
+                System.out.println("totaltx: " + totaltx);
+
+                } catch (SigarException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                }
 		
 		// Subscribe clients 2 and 3 to key "banana"
 //		client2.subscribe("banana");

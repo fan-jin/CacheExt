@@ -3,9 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package CacheExt.Example;
+package CacheWise.Demo;
 
-import CacheExt.BaseObject;
+import CacheWise.Demo.ImageJComponent;
+import CacheWise.BaseObject;
 import java.io.File;
 import java.io.IOException;
 import org.imgscalr.Scalr.*;
@@ -34,17 +35,20 @@ public class ExampleImage extends BaseObject {
     
     public static void main(String[] args)
     {
-        ExampleImage i = new ExampleImage("test", "/home/fjin1/Desktop/comp396/images/mcgill.png");
+        ExampleImage i = new ExampleImage("test", "/home/fjin1/Desktop/comp396/images/mcgill-campus.jpg");
         
         JFrame f = new JFrame("Load Image Sample");
             
-        f.addWindowListener(new WindowAdapter(){
-                public void windowClosing(WindowEvent e) {
-                    System.exit(0);
-                }
-            });
+//        f.addWindowListener(new WindowAdapter(){
+//                public void windowClosing(WindowEvent e) {
+//                    System.exit(0);
+//                }
+//            });
 
-        i.img.img = Scalr.resize(i.img.img, 150);
+        i.img.img = Scalr.resize(i.img.img, 720);
+        i.img.img = Scalr.rotate(i.img.img, Rotation.FLIP_HORZ);
+        i.img.img = Scalr.rotate(i.img.img, Rotation.FLIP_HORZ);
+ 
         
         f.add(i.img);
         f.pack();

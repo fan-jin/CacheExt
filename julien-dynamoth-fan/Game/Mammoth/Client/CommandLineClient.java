@@ -9,10 +9,10 @@ import Mammoth.NetworkEngine.RPub.LoadBalancing.LoadBalancer;
 import Mammoth.NetworkEngine.RPub.Util.KingDataset;
 import Mammoth.NetworkEngine.RPub.Util.MaxThreadsMain;
 import Mammoth.NetworkEngine.RPub.Util.RawKingDataset;
-import CacheExt.Example.Example;
-import CacheExt.Example.CacheServer;
-import CacheExt.Example.TestClient;
-import CacheExt.Example.TestImage;
+import CacheWise.Example.Example;
+import CacheWise.Impl.CacheServer;
+import CacheWise.Test.TestClient;
+import CacheWise.Test.TestImage;
 
 public class CommandLineClient {
 

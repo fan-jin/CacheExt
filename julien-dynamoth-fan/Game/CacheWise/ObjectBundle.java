@@ -3,9 +3,8 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package CacheExt;
+package CacheWise;
 
-import CacheExt.Example.Player;
 import java.util.Iterator;
 import java.util.LinkedList;
 

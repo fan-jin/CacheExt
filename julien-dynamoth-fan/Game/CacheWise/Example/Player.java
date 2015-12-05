@@ -3,10 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package CacheExt.Example;
+package CacheWise.Example;
 
-import CacheExt.BaseObject;
-import CacheExt.Operation;
+import CacheWise.BaseObject;
+import CacheWise.Operation;
 /**
  *
  * @author fjin1

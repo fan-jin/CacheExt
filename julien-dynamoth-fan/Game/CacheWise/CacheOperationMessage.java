@@ -1,6 +1,6 @@
-package CacheExt.Messages;
+package CacheWise;
 
-import CacheExt.Operation;
+import CacheWise.Operation;
 import Mammoth.Util.Message.MessageImpl;
 
 /**

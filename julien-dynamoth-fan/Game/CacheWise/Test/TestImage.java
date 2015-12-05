@@ -3,10 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package CacheExt.Example;
+package CacheWise.Test;
 
-import CacheExt.BaseObject;
-import CacheExt.Serialization;
+import CacheWise.BaseObject;
+import CacheWise.Serialization;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;

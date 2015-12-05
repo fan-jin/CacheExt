@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package CacheExt.Example;
+package CacheWise.Impl;
 
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -11,10 +11,10 @@ import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.Hashtable;
 
-import CacheExt.CacheExt;
-import CacheExt.SubjectPlus;
-import CacheExt.Operation;
-import CacheExt.CacheClient;
+import CacheWise.CacheExt;
+import CacheWise.SubjectPlus;
+import CacheWise.Operation;
+import CacheWise.CacheClient;
 /**
  *
  * @author fjin1
