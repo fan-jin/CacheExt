@@ -11,7 +11,7 @@ import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.Hashtable;
 
-import CacheWise.CacheExt;
+import CacheWise.CacheWise;
 import CacheWise.SubjectPlus;
 import CacheWise.Operation;
 import CacheWise.CacheClient;
@@ -19,7 +19,7 @@ import CacheWise.CacheClient;
  *
  * @author fjin1
  */
-public class CacheServer extends CacheClient implements CacheExt {
+public class CacheServer extends CacheClient implements CacheWise {
     
     private Hashtable<String, SubjectPlus> hashtable;
     
@@ -82,7 +82,7 @@ public class CacheServer extends CacheClient implements CacheExt {
             // Create a new cache server object
             CacheServer c = new CacheServer();
             // Dynamically generate the stub (client proxy)
-            CacheExt stub = (CacheExt) UnicastRemoteObject.exportObject(c, 0);
+            CacheWise stub = (CacheWise) UnicastRemoteObject.exportObject(c, 0);
 
             // Bind the remote object's stub in the registry
             // Start rmiregistry on localhost with default port unless specified 

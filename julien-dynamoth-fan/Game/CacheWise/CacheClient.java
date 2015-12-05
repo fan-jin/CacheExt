@@ -30,7 +30,7 @@ public abstract class CacheClient {
 	private Reactor reactor; // Mammoth reactor
 
         // RMI stuff
-        private CacheExt server; // server stub
+        private CacheWise server; // server stub
 
         // Local storage stuff
         private Hashtable<String, ObjectBundle> hashtable = new Hashtable<String, ObjectBundle>(); // hashtable for objects
@@ -71,7 +71,7 @@ public abstract class CacheClient {
             try
             {
                 registry = LocateRegistry.getRegistry(server_host, server_port);
-                server = (CacheExt) registry.lookup(server_name);
+                server = (CacheWise) registry.lookup(server_name);
                 if(server!=null)
                 {
                     log("Successfully Connected to " + server_name);

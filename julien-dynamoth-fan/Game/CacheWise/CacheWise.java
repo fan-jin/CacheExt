@@ -11,7 +11,7 @@ import java.rmi.RemoteException;
  *
  * @author fjin1
  */
-public interface CacheExt extends Remote {
+public interface CacheWise extends Remote {
     
     public void loadObj(String key, byte[] obj) throws RemoteException;
     public byte[] getObj(String key) throws RemoteException;
