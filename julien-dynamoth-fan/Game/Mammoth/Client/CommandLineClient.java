@@ -9,11 +9,10 @@ import Mammoth.NetworkEngine.RPub.LoadBalancing.LoadBalancer;
 import Mammoth.NetworkEngine.RPub.Util.KingDataset;
 import Mammoth.NetworkEngine.RPub.Util.MaxThreadsMain;
 import Mammoth.NetworkEngine.RPub.Util.RawKingDataset;
-import CacheWise.Example.Example;
 import CacheWise.Impl.CacheServer;
 import CacheWise.Test.TestClient;
-import CacheWise.Test.TestImage;
 import CacheWise.Test.TestMonitor;
+import CacheWise.Test.TestRMIClient;
 
 public class CommandLineClient {
 
@@ -90,7 +89,17 @@ public class CommandLineClient {
                                 clientArgs[j-1] = args[j];
                             }
                             TestClient.main(clientArgs);
-                        }                        
+                        }  
+                } else if (mode.equals("cacheext-rmi-client")) {
+			String[] clientArgs = new String[args.length - 1];
+                        if (args.length > 1)
+                        {
+                            for (int j = 1; j < args.length; j++)
+                            {
+                                clientArgs[j-1] = args[j];
+                            }
+                            TestRMIClient.main(clientArgs);
+                        }
 		} else if (mode.equals("cacheext-sigar")) {
 			String[] sigarArgs = new String[args.length - 1];
                         if (args.length > 1)
