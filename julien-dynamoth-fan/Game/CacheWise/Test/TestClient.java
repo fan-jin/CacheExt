@@ -52,12 +52,12 @@ public class TestClient extends CacheClient {
         }
     }
     
-    public void setSendTime(long t)
+    public void setStartTime(long t)
     {
         responseTime[0] = t;
     }
     
-    public void setReceiveTime(long t)
+    public void setEndTime(long t)
     {
         responseTime[1] = t;
     }
@@ -88,7 +88,7 @@ public class TestClient extends CacheClient {
         // log on matching operation name
         if (operation.getName().equals(op))
         {
-            setReceiveTime(System.nanoTime());
+            setEndTime(System.nanoTime());
             logResponseTime();
         }
     }
@@ -140,7 +140,7 @@ public class TestClient extends CacheClient {
                 wait(10);
                 for (int i = 0; i < 100; i++)
                 {
-                    c.setSendTime(System.nanoTime());
+                    c.setStartTime(System.nanoTime());
                     c.remotePerform(key, new Operation(c.getNextVersion(key), "flipHorizontal"));
                     wait(2);
                 }
@@ -166,7 +166,7 @@ public class TestClient extends CacheClient {
                 wait(10);
                 for (int i = 0; i < 100; i++)
                 {
-                    c.setSendTime(System.nanoTime());
+                    c.setStartTime(System.nanoTime());
                     c.remotePerform(key, new Operation(c.getNextVersion(key), "rotateClockwise", 180));
                     wait(2);
                 }
