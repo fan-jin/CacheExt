@@ -6,12 +6,17 @@
 package CacheWise.Test;
 
 import CacheWise.BaseObject;
+import CacheWise.Operation;
 import CacheWise.Serialization;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import javax.imageio.ImageIO;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
@@ -117,19 +122,53 @@ public class TestImage extends BaseObject {
     
     public static void main (String[] args)
     {
-        TestImage image = new TestImage("test", "/home/fjin1/Desktop/comp396/images/48.9MB.jpg");
-        for (int i = 0; i < 5; i++)
+        if (args.length > 0)
         {
-            long before = System.nanoTime();
-            image.flipHorizontal();
-            long after = System.nanoTime();
-            System.out.println((after - before));
+            String action = args[0];
+            int iteration = Integer.valueOf(args[1]);
+            String prefix = args[2];
+            String src = args[3];
+            TestImage image = new TestImage("test", src);
+            
+            DateFormat dF = new SimpleDateFormat("yyyy_MM_dd HH-mm-ss");
+            Calendar cal = Calendar.getInstance();
+            String fileName = dF.format(cal.getTime())+ ".csv";
+            fileName = prefix + fileName;
+            fileName = "../results/" + fileName;
+            File fp = new File(fileName);
+            FileWriter fw = null;
+            try{
+                if (fp.createNewFile()){
+                    fw = new FileWriter(fileName, true);
+                    System.out.println("Writing to file: " + fileName);
+                }
+            } catch (Exception e){
+                e.printStackTrace();
+            }
+            
+            for (int i = 0; i < iteration; i++)
+            {
+                long before = System.nanoTime();
+                if (action.equals("flip"))
+                {
+                    image.applyUpdate(new Operation(image.getVersion() + 1, "flipHorizontal"));
+                }
+                else if (action.equals("rotate"))
+                {
+                    image.applyUpdate(new Operation(image.getVersion() + 1, "rotateClockwise", 180));
+                }
+                long after = System.nanoTime();
+                try
+                {
+                    if (fw !=null){
+                        fw.write((after - before) + "\n");
+                        fw.flush();
+                    }
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
+                System.out.println((after - before));
+            }
         }
-//        image.rotateClockwise(90);
-//        image.rotateClockwise(90);
-//        image.flipHorizontal();
-//        TestImage copy = (TestImage) Serialization.deserialize(Serialization.serialize(image));
-//        copy.flipHorizontal();
-//        copy.display(720);
     }
 }
