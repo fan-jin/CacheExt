@@ -147,7 +147,7 @@ public abstract class CacheClient {
         
         public void remoteGet(String key)
         {
-            log("CacheClient::fetch: key=" + key);
+            log("CacheClient::remoteGet: key=" + key);
             try
             {
                 // subscribe then retrieve
@@ -166,7 +166,7 @@ public abstract class CacheClient {
             }
             catch (RemoteException e)
             {
-                log("load exception: " + e.toString());
+                log("remoteGet exception: " + e.toString());
                 e.printStackTrace();
             }
         }
