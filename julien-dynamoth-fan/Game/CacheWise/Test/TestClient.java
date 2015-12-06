@@ -20,13 +20,13 @@ import java.util.Calendar;
  */
 public class TestClient extends CacheClient {
 	
-    private int clientId = 0;
+    protected int clientId = 0;
     
-    private long[] responseTime = new long[2]; // [0] for send, [1] for receive
-    private String op; // filter on operation name
+    protected long[] responseTime = new long[2]; // [0] for send, [1] for receive
+    protected String op; // filter on operation name
     
-    private FileWriter fw;
-    private String fileName;
+    protected FileWriter fw;
+    protected String fileName;
     
     public TestClient(int clientId, String host, int port) {
         super();
