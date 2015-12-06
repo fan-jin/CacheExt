@@ -59,7 +59,7 @@ public class TestMonitor {
                     
                     DateFormat dF = new SimpleDateFormat("yyyy_MM_dd HH-mm-ss");
                     Calendar cal = Calendar.getInstance();
-                    String fileName = dF.format(cal.getTime())+ ".txt";
+                    String fileName = dF.format(cal.getTime())+ ".csv";
                     
                     if (args.length > 0)
                     {

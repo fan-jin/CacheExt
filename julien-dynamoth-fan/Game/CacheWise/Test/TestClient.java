@@ -6,6 +6,7 @@
 package CacheWise.Test;
 
 import CacheWise.CacheClient;
+import CacheWise.Operation;
 
 /**
  *
@@ -55,6 +56,36 @@ public class TestClient extends CacheClient {
                 TestImage img = (TestImage) c.localGet(key);
                 img.display(720);
             }
+            else if (action.equals("flip"))
+            {
+                // Operation: flipHorizontal
+                // Count: 100 times at 2 seconds interval
+                String key = args[4];
+                // retrieve the image
+                c.remoteGet(key);
+                // start sigar
+                TestMonitor.main(new String[] {"client-"+id+"-flip-"+key+"-"});
+                // wait 5 seconds before begin
+                wait(5);
+                for (int i = 0; i < 10; i++)
+                {
+                    c.remotePerform(key, new Operation(c.getNextVersion(key), "flipHorizontal"));
+                    wait(2);
+                }
+            }
+        }
+    }
+    
+    public static void wait(int second)
+    {
+        try
+        {
+            Thread.sleep(second * 1000);
+        }
+        catch (InterruptedException e)
+        {
+            System.err.println("Thread.sleep exception: " + e.toString());
+            e.printStackTrace();
         }
     }
 }

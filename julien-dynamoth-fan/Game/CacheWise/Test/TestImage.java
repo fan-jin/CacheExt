@@ -117,12 +117,11 @@ public class TestImage extends BaseObject {
     
     public static void main (String[] args)
     {
-        TestImage image = new TestImage("test", "/home/fjin1/Desktop/comp396/images/mcgill-campus.jpg");
-        //image.flipHorizontal();
-//        image.rotateClockwise(90);
-//        image.rotateClockwise(90);
-//        image.flipHorizontal();
-        // image.display(720);
+        TestImage image = new TestImage("test", "/home/fjin1/Desktop/comp396/images/48.9MB.jpg");
+        image.flipHorizontal();
+        image.rotateClockwise(90);
+        image.rotateClockwise(90);
+        image.flipHorizontal();
         TestImage copy = (TestImage) Serialization.deserialize(Serialization.serialize(image));
         copy.flipHorizontal();
         copy.display(720);
