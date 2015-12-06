@@ -7,6 +7,12 @@ package CacheWise.Test;
 
 import CacheWise.CacheClient;
 import CacheWise.Operation;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 /**
  *
@@ -15,17 +21,76 @@ import CacheWise.Operation;
 public class TestClient extends CacheClient {
 	
     private int clientId = 0;
-
+    
+    private long[] responseTime = new long[2]; // [0] for send, [1] for receive
+    private String op; // filter on operation name
+    
+    private FileWriter fw;
+    private String fileName;
+    
     public TestClient(int clientId, String host, int port) {
         super();
         this.clientId = clientId;
         connectToServer("cache", host, port); // connect to server at specified host and port
+    }
+    
+    public TestClient(int clientId, String host, int port, String operation, String filePrefix) {
+        this(clientId, host, port);
+        op = operation; // set operation name
+        DateFormat dF = new SimpleDateFormat("yyyy_MM_dd HH-mm-ss");
+        Calendar cal = Calendar.getInstance();
+        fileName = dF.format(cal.getTime())+ ".csv";
+        fileName = filePrefix + fileName; // prepend prefix
+        File fp = new File(fileName);
+        try{
+            if (fp.createNewFile()){
+                fw = new FileWriter(fileName, true);
+                log("Create log file: " + fileName);
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+    
+    public void setSendTime(long t)
+    {
+        responseTime[0] = t;
+    }
+    
+    public void setReceiveTime(long t)
+    {
+        responseTime[1] = t;
+    }
+    
+    public void logResponseTime()
+    {
+        try {
+            if (fw != null){
+                fw.write((responseTime[1] - responseTime[0]) + "\n");
+                fw.flush();
+            }
+        } catch (IOException e)
+        {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void log(String msg)
     {
         System.out.println("TestClient[" + clientId + "]-" + msg);
+    }
+    
+    @Override
+    public void operationReceived(String key, Operation operation)
+    {
+        super.operationReceived(key, operation);
+        // log on matching operation name
+        if (operation.getName().equals(op))
+        {
+            setReceiveTime(System.nanoTime());
+            logResponseTime();
+        }
     }
     
     public static void main(String[] args)
@@ -37,9 +102,9 @@ public class TestClient extends CacheClient {
             String host = args[1]; // rmiregistry host
             int port = Integer.parseInt(args[2]); // rmiregistry port
             String action = args[3]; // client action
-            TestClient c = new TestClient(id, host, port);
             if (action.equals("putimage"))
             {
+                TestClient c = new TestClient(id, host, port);
                 // store an image in server
                 String key = args[4];
                 String src = args[5];
@@ -49,6 +114,7 @@ public class TestClient extends CacheClient {
             }
             else if (action.equals("getimage"))
             {
+                TestClient c = new TestClient(id, host, port);
                 // retrieve an image from server, then display
                 String key = args[4];
                 c.remoteGet(key);
@@ -58,20 +124,55 @@ public class TestClient extends CacheClient {
             }
             else if (action.equals("flip"))
             {
+                String key = args[4];
+                TestClient c = new TestClient(id, 
+                        host, 
+                        port, 
+                        "flipHorizontal",
+                        "../results/"+"client-"+id+"-flip-"+key+"-response-time-");
                 // Operation: flipHorizontal
                 // Count: 100 times at 2 seconds interval
-                String key = args[4];
                 // retrieve the image
                 c.remoteGet(key);
                 // start sigar
                 TestMonitor.main(new String[] {"client-"+id+"-flip-"+key+"-"});
-                // wait 5 seconds before begin
-                wait(5);
-                for (int i = 0; i < 10; i++)
+                // wait 10 seconds before begin
+                wait(10);
+                for (int i = 0; i < 100; i++)
                 {
+                    c.setSendTime(System.nanoTime());
                     c.remotePerform(key, new Operation(c.getNextVersion(key), "flipHorizontal"));
                     wait(2);
                 }
+                // wait for 10 seconds for sigar log to flatten
+                wait(10);
+                System.exit(0);
+            }
+            else if (action.equals("rotate"))
+            {
+                String key = args[4];
+                TestClient c = new TestClient(id, 
+                        host, 
+                        port, 
+                        "rotateClockwise",
+                        "../results/"+"client-"+id+"-rotate-"+key+"-response-time-");
+                // Operation: rotateClockwise(180)
+                // Count: 100 times at 2 seconds interval
+                // retrieve the image
+                c.remoteGet(key);
+                // start sigar
+                TestMonitor.main(new String[] {"client-"+id+"-rotate-"+key+"-"});
+                // wait 10 seconds before begin
+                wait(10);
+                for (int i = 0; i < 100; i++)
+                {
+                    c.setSendTime(System.nanoTime());
+                    c.remotePerform(key, new Operation(c.getNextVersion(key), "rotateClockwise", 180));
+                    wait(2);
+                }
+                // wait for 10 seconds for sigar log to flatten
+                wait(10);
+                System.exit(0);
             }
         }
     }

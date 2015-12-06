@@ -118,12 +118,18 @@ public class TestImage extends BaseObject {
     public static void main (String[] args)
     {
         TestImage image = new TestImage("test", "/home/fjin1/Desktop/comp396/images/48.9MB.jpg");
-        image.flipHorizontal();
-        image.rotateClockwise(90);
-        image.rotateClockwise(90);
-        image.flipHorizontal();
-        TestImage copy = (TestImage) Serialization.deserialize(Serialization.serialize(image));
-        copy.flipHorizontal();
-        copy.display(720);
+        for (int i = 0; i < 5; i++)
+        {
+            long before = System.nanoTime();
+            image.flipHorizontal();
+            long after = System.nanoTime();
+            System.out.println((after - before));
+        }
+//        image.rotateClockwise(90);
+//        image.rotateClockwise(90);
+//        image.flipHorizontal();
+//        TestImage copy = (TestImage) Serialization.deserialize(Serialization.serialize(image));
+//        copy.flipHorizontal();
+//        copy.display(720);
     }
 }
