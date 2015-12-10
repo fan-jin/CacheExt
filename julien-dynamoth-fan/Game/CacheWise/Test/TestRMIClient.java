@@ -54,7 +54,7 @@ public class TestRMIClient extends TestClient {
                         "flipHorizontal",
                         "../results/"+"rmi-client-"+id+"-flip-"+key+"-response-time-");
                 // Operation: flipHorizontal
-                // Count: 100 times at 2 seconds interval
+                // Count: 100 times at n seconds interval
                 // retrieve the image
                 c.remoteGet(key);
                 // start sigar
@@ -86,7 +86,7 @@ public class TestRMIClient extends TestClient {
                         "rotateClockwise",
                         "../results/"+"rmi-client-"+id+"-rotate-"+key+"-response-time-");
                 // Operation: rotateClockwise(180)
-                // Count: 100 times at 2 seconds interval
+                // Count: 100 times at n seconds interval
                 // retrieve the image
                 c.remoteGet(key);
                 // start sigar
