@@ -3,7 +3,7 @@ import glob
 import csv
 import openpyxl # from https://pythonhosted.org/openpyxl/ or PyPI (e.g. via pip)
 
-for csvfile in glob.glob(os.path.join('./*/*/', '*.csv')):
+for csvfile in glob.glob(os.path.join('./*/', '*.csv')):
     wb = openpyxl.Workbook()
     ws = wb.active
     with open(csvfile, 'rb') as f:
