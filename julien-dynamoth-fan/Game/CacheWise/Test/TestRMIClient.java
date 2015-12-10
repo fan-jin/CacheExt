@@ -47,19 +47,20 @@ public class TestRMIClient extends TestClient {
             if (action.equals("flip"))
             {
                 String key = args[4];
+                int interval = Integer.valueOf(args[5]);
                 TestRMIClient c = new TestRMIClient(id, 
                         host, 
                         port, 
                         "flipHorizontal",
                         "../results/"+"rmi-client-"+id+"-flip-"+key+"-response-time-");
                 // Operation: flipHorizontal
-                // Count: 100 times at 2 seconds interval
+                // Count: 100 times at n seconds interval
                 // retrieve the image
                 c.remoteGet(key);
                 // start sigar
                 TestMonitor.main(new String[] {"rmi-client-"+id+"-flip-"+key+"-"});
-                // wait 10 seconds before begin
-                wait(10);
+                // wait 30 seconds before begin
+                wait(30);
                 for (int i = 0; i < 100; i++)
                 {
                     Operation o = new Operation(c.getNextVersion(key), "flipHorizontal");
@@ -69,28 +70,29 @@ public class TestRMIClient extends TestClient {
                     c.setEndTime(System.nanoTime());
                     c.logResponseTime();
                     c.publishOperation(key, o);
-                    wait(2);
+                    wait(interval + (int)(Math.random() * (interval + 1))); // wait randomly to avoid collision
                 }
-                // wait for 10 seconds for sigar log to flatten
-                wait(10);
+                // wait for 30 seconds for sigar log to flatten
+                wait(30);
                 System.exit(0);
             }
             else if (action.equals("rotate"))
             {
                 String key = args[4];
+                int interval = Integer.valueOf(args[5]);
                 TestRMIClient c = new TestRMIClient(id, 
                         host, 
                         port, 
                         "rotateClockwise",
                         "../results/"+"rmi-client-"+id+"-rotate-"+key+"-response-time-");
                 // Operation: rotateClockwise(180)
-                // Count: 100 times at 2 seconds interval
+                // Count: 100 times at n seconds interval
                 // retrieve the image
                 c.remoteGet(key);
                 // start sigar
                 TestMonitor.main(new String[] {"rmi-client-"+id+"-rotate-"+key+"-"});
-                // wait 10 seconds before begin
-                wait(10);
+                // wait 30 seconds before begin
+                wait(30);
                 for (int i = 0; i < 100; i++)
                 {
                     Operation o = new Operation(c.getNextVersion(key), "rotateClockwise", 180);
@@ -100,10 +102,10 @@ public class TestRMIClient extends TestClient {
                     c.setEndTime(System.nanoTime());
                     c.logResponseTime();
                     c.publishOperation(key, o);
-                    wait(2);
+                    wait(interval + (int)(Math.random() * (interval + 1))); // wait randomly to avoid collision
                 }
-                // wait for 10 seconds for sigar log to flatten
-                wait(10);
+                // wait for 30 seconds for sigar log to flatten
+                wait(30);
                 System.exit(0);
             }
         }

@@ -3,17 +3,16 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/home/fjin1/Desktop/comp396/julien-dynamoth-fan/Game/CacheExt/BaseObject.java</file>
-            <file>file:/home/fjin1/Desktop/comp396/julien-dynamoth-fan/Game/CacheExt/Example/TestImage.java</file>
-            <file>file:/home/fjin1/Desktop/comp396/julien-dynamoth-fan/Game/CacheExt/Example/ImageJComponent.java</file>
-            <file>file:/home/fjin1/Desktop/comp396/julien-dynamoth-fan/Game/CacheExt/Example/Example.java</file>
-            <file>file:/home/fjin1/Desktop/comp396/julien-dynamoth-fan/Game/CacheExt/Example/ExampleCacheClient.java</file>
-            <file>file:/home/fjin1/Desktop/comp396/julien-dynamoth-fan/Game/CacheExt/Example/CacheServer.java</file>
-            <file>file:/home/fjin1/Desktop/comp396/julien-dynamoth-fan/Game/CacheExt/Serialization.java</file>
-            <file>file:/home/fjin1/Desktop/comp396/julien-dynamoth-fan/Game/CacheExt/Example/Player.java</file>
-            <file>file:/home/fjin1/Desktop/comp396/julien-dynamoth-fan/Game/CacheExt/Example/ExampleImage.java</file>
-            <file>file:/home/fjin1/Desktop/comp396/julien-dynamoth-fan/Game/Mammoth/NetworkEngine/RPub/LoadAnalyzing/LocalLoadAnalyzer.java</file>
-            <file>file:/home/fjin1/Desktop/comp396/julien-dynamoth-fan/Game/CacheExt/CacheClient.java</file>
+            <file>file:/home/fjin1/Desktop/comp396/julien-dynamoth-fan/Game/Mammoth/Client/CommandLineClient.java</file>
+            <file>file:/home/fjin1/Desktop/comp396/julien-dynamoth-fan/Game/CacheWise/Test/TestClient.java</file>
+            <file>file:/home/fjin1/Desktop/comp396/julien-dynamoth-fan/Game/CacheWise/Demo/ExampleImage.java</file>
+            <file>file:/home/fjin1/Desktop/comp396/julien-dynamoth-fan/Game/CacheWise/Invocation.java</file>
+            <file>file:/home/fjin1/Desktop/comp396/julien-dynamoth-fan/Game/CacheWise/Test/TestRMIClient.java</file>
+            <file>file:/home/fjin1/Desktop/comp396/julien-dynamoth-fan/Game/CacheWise/Serialization.java</file>
+            <file>file:/home/fjin1/Desktop/comp396/julien-dynamoth-fan/Game/CacheWise/Test/TestMonitor.java</file>
+            <file>file:/home/fjin1/Desktop/comp396/julien-dynamoth-fan/Game/CacheWise/Operation.java</file>
+            <file>file:/home/fjin1/Desktop/comp396/julien-dynamoth-fan/Game/CacheWise/Test/TestImage.java</file>
+            <file>file:/home/fjin1/Desktop/comp396/julien-dynamoth-fan/Game/CacheWise/Impl/CacheServer.java</file>
         </group>
     </open-files>
 </project-private>
