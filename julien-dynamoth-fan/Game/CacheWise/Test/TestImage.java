@@ -168,7 +168,7 @@ public class TestImage extends BaseObject {
                     e.printStackTrace();
                 }
                 System.out.println((after - before));
-                wait(1);
+                wait(3);
             }
         }
     }
